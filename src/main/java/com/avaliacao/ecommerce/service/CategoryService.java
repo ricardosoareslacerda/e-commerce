@@ -1,5 +1,6 @@
 package com.avaliacao.ecommerce.service;
 
+import com.avaliacao.ecommerce.excecao.BusinessException;
 import com.avaliacao.ecommerce.model.Category;
 import com.avaliacao.ecommerce.repository.CategoryRepository;
 import org.springframework.beans.BeanUtils;
@@ -16,7 +17,7 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Category> listAllCategories() {
+    public List<Category> findAll() {
         return categoryRepository.findAll();
     }
 
@@ -25,13 +26,19 @@ public class CategoryService {
     }
 
     public Category save(Category category) {
+        this.validateDuplicate(category);
         return categoryRepository.save(category);
     }
 
     public Category update(int code, Category category) {
         Category categoryModel = this.isExists(code);
+        this.validateDuplicate(category);
         BeanUtils.copyProperties(category, categoryModel, "code");
         return categoryRepository.save(categoryModel);
+    }
+
+    public void delete(Integer code) {
+        categoryRepository.deleteById(code);
     }
 
     private Category isExists(int code) {
@@ -40,5 +47,14 @@ public class CategoryService {
             throw new EmptyResultDataAccessException(1);
         }
         return category.get();
+    }
+
+    private void validateDuplicate(Category category) {
+        Category categoryModel = categoryRepository.findByNome(category.getName());
+        if (categoryModel != null &&
+                categoryModel.getCode() != category.getCode()) {
+            throw new BusinessException(
+                    String.format("A category %s já esta cadastrada", category.getName().toUpperCase()));
+        }
     }
 }

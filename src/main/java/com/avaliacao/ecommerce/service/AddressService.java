@@ -1,5 +1,6 @@
 package com.avaliacao.ecommerce.service;
 
+import com.avaliacao.ecommerce.excecao.BusinessException;
 import com.avaliacao.ecommerce.model.Address;
 import com.avaliacao.ecommerce.repository.AddressRepository;
 import org.springframework.beans.BeanUtils;
@@ -16,7 +17,7 @@ public class AddressService {
     @Autowired
     private AddressRepository addressRepository;
 
-    public List<Address> listAllAddresss() {
+    public List<Address> listAll() {
         return addressRepository.findAll();
     }
 
@@ -25,20 +26,35 @@ public class AddressService {
     }
 
     public Address save(Address address) {
+        this.validateDuplicate(address);
         return addressRepository.save(address);
     }
 
     public Address update(int code, Address address) {
-        Address addressModel = this.isExists(code);
+        Address addressModel = this.validateExists(code);
+        this.validateDuplicate(address);
         BeanUtils.copyProperties(address, addressModel, "code");
         return addressRepository.save(addressModel);
     }
 
-    private Address isExists(int code) {
+    public void delete(int code) {
+        addressRepository.deleteById(code);
+    }
+
+    private Address validateExists(int code) {
         Optional<Address> address = this.findByCode(code);
         if (address.isEmpty()) {
             throw new EmptyResultDataAccessException(1);
         }
         return address.get();
+    }
+
+    private void validateDuplicate(Address address) {
+        Address addressModel = addressRepository.findByNome(address.getPublicPlace());
+        if (addressModel != null &&
+                addressModel.getCode() != address.getCode()) {
+            throw new BusinessException(
+                    String.format("A Endereço %s já esta cadastrado", address.getPublicPlace().toUpperCase()));
+        }
     }
 }

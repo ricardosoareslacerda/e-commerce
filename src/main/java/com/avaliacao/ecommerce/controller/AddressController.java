@@ -1,5 +1,7 @@
 package com.avaliacao.ecommerce.controller;
 
+import com.avaliacao.ecommerce.controller.dto.address.AddressRequestDTO;
+import com.avaliacao.ecommerce.controller.dto.address.AddressResponseDTO;
 import com.avaliacao.ecommerce.model.Address;
 import com.avaliacao.ecommerce.service.AddressService;
 import io.swagger.annotations.Api;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Api(tags = "Endereco")
 @RestController
@@ -20,29 +23,40 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
-    @ApiOperation(value = "Listar")
+    @ApiOperation(value = "Listar", nickname = "findAll")
     @GetMapping
-    public List<Address> findAll() {
-        return addressService.listAllAddresss();
+    public List<AddressResponseDTO> findAll() {
+        return addressService.listAll().stream().map(addresModel ->
+                        AddressResponseDTO.converterToAddresResponseDTO(addresModel))
+                .collect(Collectors.toList());
     }
 
-    @ApiOperation(value = "Encontrar por codigo")
+    @ApiOperation(value = "Listar por codigo", nickname = "findByCode")
     @GetMapping("/{codigo}")
-    public ResponseEntity<Optional<Address>> findByCode(@PathVariable Integer codigo) {
-        Optional<Address> addressResponse = addressService.findByCode(codigo);
-        return addressResponse.isPresent() ? ResponseEntity.ok(addressResponse) : ResponseEntity.notFound().build();
+    public ResponseEntity<AddressResponseDTO> findByCode(@PathVariable Integer codigo) {
+        Optional<Address> addressModel = addressService.findByCode(codigo);
+        return addressModel.isPresent()
+                ? ResponseEntity.ok(AddressResponseDTO.converterToAddresResponseDTO(addressModel.get()))
+                : ResponseEntity.notFound().build();
     }
 
-    @ApiOperation(value = "Salvar")
+    @ApiOperation(value = "Salvar", nickname = "salvar")
     @PostMapping
-    public ResponseEntity<Address> save(@RequestBody Address addressRequest) {
-        Address addressResponse = addressService.save(addressRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addressResponse);
+    public ResponseEntity<AddressResponseDTO> save(@RequestBody AddressRequestDTO addressRequest) {
+        Address addressModel = addressService.save(addressRequest.converterAddressModel());
+        return ResponseEntity.status(HttpStatus.CREATED).body(AddressResponseDTO.converterToAddresResponseDTO(addressModel));
     }
 
-    @ApiOperation(value = "Atualizar")
+    @ApiOperation(value = "Atualizar", nickname = "atualizar")
     @PutMapping("/{codigo}")
-    public ResponseEntity<Address> update(@PathVariable Integer codigo, @RequestBody Address addressRequest) {
-        return ResponseEntity.ok(addressService.update(codigo, addressRequest));
+    public ResponseEntity<AddressResponseDTO> update(@PathVariable Integer codigo, @RequestBody AddressRequestDTO addressRequest) {
+        return ResponseEntity.ok(AddressResponseDTO.converterToAddresResponseDTO(addressService.update(codigo, addressRequest.converterAddressModel(codigo))));
+    }
+
+    @ApiOperation(value = "Deletar", nickname = "deletar")
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer codigo) {
+        addressService.delete(codigo);
     }
 }

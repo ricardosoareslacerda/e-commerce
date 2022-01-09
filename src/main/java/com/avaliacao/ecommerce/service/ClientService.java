@@ -1,5 +1,6 @@
 package com.avaliacao.ecommerce.service;
 
+import com.avaliacao.ecommerce.excecao.BusinessException;
 import com.avaliacao.ecommerce.model.Client;
 import com.avaliacao.ecommerce.repository.ClientRepository;
 import org.springframework.beans.BeanUtils;
@@ -16,7 +17,7 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
-    public List<Client> listAllClients() {
+    public List<Client> listAll() {
         return clientRepository.findAll();
     }
 
@@ -25,20 +26,35 @@ public class ClientService {
     }
 
     public Client save(Client client) {
+        this.validateDuplicate(client);
         return clientRepository.save(client);
     }
 
     public Client update(int code, Client client) {
-        Client clientModel = this.isExists(code);
+        Client clientModel = this.validateExists(code);
+        this.validateDuplicate(client);
         BeanUtils.copyProperties(client, clientModel, "code");
         return clientRepository.save(clientModel);
     }
 
-    private Client isExists(int code) {
+    public void delete(int code) {
+        clientRepository.deleteById(code);
+    }
+
+    private Client validateExists(int code) {
         Optional<Client> client = this.findByCode(code);
         if (client.isEmpty()) {
             throw new EmptyResultDataAccessException(1);
         }
         return client.get();
+    }
+
+    private void validateDuplicate(Client client) {
+        Client clientModel = clientRepository.findByNome(client.getName());
+        if (clientModel != null &&
+                clientModel.getCode() != client.getCode()) {
+            throw new BusinessException(
+                    String.format("A cliente %s já esta cadastrado", client.getName().toUpperCase()));
+        }
     }
 }

@@ -28,7 +28,7 @@ public class Client {
 
     @NotEmpty(message = "CPF do cliente deve ser informada!")
     @Column(name = "CPF")
-    private int cpf;
+    private String cpf;
 
     @NotEmpty(message = "Celular do cliente deve ser informado!")
     @Column(name = "CELULAR")
@@ -41,4 +41,12 @@ public class Client {
     @OneToMany
     @JoinColumn(name = "CODIGO", referencedColumnName = "CODIGO")
     private List<Address> addresses;
+
+    public Client(String name, String cpf, int cell, String email, List<Address> addresses) {
+        this.name = name;
+        this.cpf = cpf;
+        this.cell = cell;
+        this.email = email;
+        this.addresses = addresses;
+    }
 }

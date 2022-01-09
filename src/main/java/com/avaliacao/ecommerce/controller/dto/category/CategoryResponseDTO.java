@@ -1,4 +1,4 @@
-package com.avaliacao.ecommerce.controller.dto;
+package com.avaliacao.ecommerce.controller.dto.category;
 
 import com.avaliacao.ecommerce.model.Category;
 import io.swagger.annotations.ApiModel;
@@ -21,7 +21,7 @@ public class CategoryResponseDTO {
     @ApiModelProperty(value = "Nome")
     private String name;
 
-    public static CategoryResponseDTO converterCategoryDTO(Category category) {
+    public static CategoryResponseDTO converterToCategoryDTO(Category category) {
         return new CategoryResponseDTO(category.getCode(), category.getName());
     }
 }

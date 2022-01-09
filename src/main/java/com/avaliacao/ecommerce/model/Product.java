@@ -6,15 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.util.Date;
+import java.util.Objects;
 
-@Entity
-@Table(name = "TB_ECOM_PRODUTO")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "TB_ECOM_PRODUTO")
 public class Product {
 
     @Id
@@ -22,32 +21,48 @@ public class Product {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int code;
 
-    @NotEmpty(message = "Nome do produto não pode ser vazio!")
     @Column(name = "NOME")
     private String name;
 
-    @NotEmpty(message = "Descricao do produto não pode ser vazio!")
     @Column(name = "DESCRICAO")
     private String description;
 
-    @NotEmpty(message = "Marca do produto não pode ser vazio!")
-    @Column(name = "MARCA")
-    private String brand;
+    @Column(name = "QUANTIDADE")
+    private int quantity;
 
-    @NotEmpty(message = "Categoria do produto não pode ser vazio!")
+    @Column(name = "VALOR")
+    private double value;
+
     @OneToOne
     @JoinColumn(name = "CODIGO_CATEGORIA", referencedColumnName = "CODIGO")
     private Category category;
 
-    @NotEmpty(message = "Data cadastro do produto deve ser informada!")
-    @Column(name = "DATA_CADASTRO")
-    private Date dataCadastro;
+    public Product(String name, String description, int quantity, double value, Category category) {
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.value = value;
+        this.category = category;
+    }
 
-    @NotEmpty(message = "Quantidade do produto deve ser informada!")
-    @Column(name = "QUANTIDADE")
-    private int quantidade;
+    @Override
+    public int hashCode() {
+        return Objects.hash(category, code, description, quantity, value);
+    }
 
-    @NotEmpty(message = "Valor do produto deve ser informado!")
-    @Column(name = "VALOR")
-    private double value;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Product)) {
+            return false;
+        }
+        Product other = (Product) obj;
+        return Objects.equals(category, other.category)
+                && Objects.equals(code, other.code)
+                && Objects.equals(description, other.description)
+                && Objects.equals(quantity, other.quantity)
+                && Objects.equals(value, other.value);
+    }
 }

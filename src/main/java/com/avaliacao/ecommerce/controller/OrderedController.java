@@ -20,8 +20,8 @@ public class OrderedController {
     @Autowired
     private OrderedService orderedService;
 
-    @ApiOperation(value = "Listar")
-    @GetMapping
+    @ApiOperation(value = "Listar pedidos por cliente", nickname = "listarPedidosPorCliente")
+    @GetMapping("/cliente/{codigoCliente}")
     public List<Ordered> findAll() {
         return orderedService.listAllOrdereds();
     }

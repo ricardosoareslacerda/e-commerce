@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "TB_ECOM_ENDERECO")
@@ -21,20 +20,38 @@ public class Address {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int code;
 
-    @NotEmpty(message = "Nome do endereço não pode ser vazio!")
-    @Column(name = "NOME")
-    private String name;
+    @Column(name = "TIPO")
+    private String type;
 
-    @OneToOne
-    @JoinColumn(name = "CODIGO_TIPO", referencedColumnName = "CODIGO")
-    @NotEmpty(message = "Tipo do endereço não pode ser vazio!")
-    private AddressType type;
-
-    @NotEmpty(message = "Logradouro do cliente deve ser informada!")
     @Column(name = "LOGRADOURO")
     private String publicPlace;
 
-    @NotEmpty(message = "Complemento do cliente deve ser informado!")
+    @Column(name = "NUMERO")
+    private Integer number;
+
     @Column(name = "COMPLEMENTO")
     private String complement;
+
+    @Column(name = "BAIRRO")
+    private String district;
+
+    @Column(name = "CEP")
+    private String zipCode;
+
+    @Column(name = "CIDADE")
+    private String city;
+
+    @Column(name = "ESTADO")
+    private String state;
+
+    public Address(String type, String publicPlace, Integer number, String complement, String district, String zipCode, String city, String state) {
+        this.type = type;
+        this.publicPlace = publicPlace;
+        this.number = number;
+        this.complement = complement;
+        this.district = district;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.state = state;
+    }
 }

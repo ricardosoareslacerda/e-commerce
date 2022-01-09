@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "TB_ECOM_PEDIDO")
@@ -23,9 +23,8 @@ public class Ordered {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int code;
 
-    @NotEmpty(message = "Data do pedido não pode ser vazio!")
     @Column(name = "Data")
-    private Date data;
+    private LocalDate data;
 
     @ManyToOne
     @JoinColumn(name = "CODIGO_CLIENTE", referencedColumnName = "CODIGO")
@@ -39,7 +38,27 @@ public class Ordered {
     @JoinColumn(name = "CODIGO_ITEM", referencedColumnName = "CODIGO")
     private List<OrderedItem> itens;
 
-    @NotEmpty(message = "Total do pedido deve ser informado!")
     @Column(name = "TOTAL")
     private double amount;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, data, client, delivery, itens);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Ordered)) {
+            return false;
+        }
+        Ordered other = (Ordered) obj;
+        return Objects.equals(code, other.code)
+                && Objects.equals(data, other.data)
+                && Objects.equals(client, other.client)
+                && Objects.equals(delivery, other.delivery)
+                && Objects.equals(itens, other.itens);
+    }
 }
