@@ -1,6 +1,8 @@
 package com.avaliacao.ecommerce.controller.dto.address;
 
+import com.avaliacao.ecommerce.controller.dto.client.ClientRequestDTO;
 import com.avaliacao.ecommerce.model.Address;
+import com.avaliacao.ecommerce.model.Client;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -50,11 +52,11 @@ public class AddressRequestDTO {
     @NotEmpty(message = "Estado do endereço deve ser informado!")
     private String state;
 
-    public Address converterAddressModel() {
-        return new Address(type, publicPlace, number, complement, district, zipCode, city, state);
+    public Address converterAddressModel(Client client) {
+        return new Address(type, publicPlace, number, complement, district, zipCode, city, state, client);
     }
 
-    public Address converterAddressModel(int code) {
-        return new Address(code, type, publicPlace, number, complement, district, zipCode, city, state);
+    public Address converterAddressModel(int code, Client client) {
+        return new Address(code, type, publicPlace, number, complement, district, zipCode, city, state, client);
     }
 }

@@ -18,14 +18,14 @@ public class OrderedItem {
 
     @Id
     @Column(name = "CODIGO")
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int code;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CODIGO_PEDIDO", referencedColumnName = "CODIGO")
     private Ordered ordered;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CODIGO_PRODUTO", referencedColumnName = "CODIGO")
     private Product product;
 
@@ -35,6 +35,12 @@ public class OrderedItem {
     @Override
     public int hashCode() {
         return Objects.hash(code, ordered, product, quantity);
+    }
+
+    public OrderedItem(Ordered ordered, Product product, int quantity) {
+        this.ordered = ordered;
+        this.product = product;
+        this.quantity = quantity;
     }
 
     @Override

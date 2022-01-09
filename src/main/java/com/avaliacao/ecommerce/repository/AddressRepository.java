@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AddressRepository extends JpaRepository<Address, Integer> {
 
-    Address findByNome(String nome);
+    Address findByPublicPlace(String publicPlace);
+
+    Address findByClientCode(Integer codeCliente);
 }

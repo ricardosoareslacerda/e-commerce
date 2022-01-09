@@ -1,6 +1,10 @@
 package com.avaliacao.ecommerce.controller;
 
+import com.avaliacao.ecommerce.controller.dto.ordered.ClientOrderedResponseDTO;
+import com.avaliacao.ecommerce.controller.dto.ordered.OrderedRequestDTO;
+import com.avaliacao.ecommerce.controller.dto.ordered.OrderedResponseDTO;
 import com.avaliacao.ecommerce.model.Ordered;
+import com.avaliacao.ecommerce.service.ClientService;
 import com.avaliacao.ecommerce.service.OrderedService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,8 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import javax.validation.Valid;
 
 @Api(tags = "Pedido")
 @RestController
@@ -20,23 +23,33 @@ public class OrderedController {
     @Autowired
     private OrderedService orderedService;
 
+    @Autowired
+    private ClientService clientService;
+
     @ApiOperation(value = "Listar pedidos por cliente", nickname = "listarPedidosPorCliente")
     @GetMapping("/cliente/{codigoCliente}")
-    public List<Ordered> findAll() {
-        return orderedService.listAllOrdereds();
+    public ResponseEntity<ClientOrderedResponseDTO> listOrderedByClient(@PathVariable Integer codigoCliente){
+        return ResponseEntity.ok(orderedService.listOrderedByClient(codigoCliente));
     }
 
-    @ApiOperation(value = "Encontrar por codigo")
+    @ApiOperation(value = "Listar pedidos por código", nickname = "listarPedidosPorCodigo")
     @GetMapping("/{codigo}")
-    public ResponseEntity<Optional<Ordered>> findByCode(@PathVariable Integer codigo) {
-        Optional<Ordered> orderedResponse = orderedService.findByCode(codigo);
-        return orderedResponse.isPresent() ? ResponseEntity.ok(orderedResponse) : ResponseEntity.notFound().build();
+    public ResponseEntity<OrderedResponseDTO> listOrderedByCode(@PathVariable Integer codigo) {
+        return ResponseEntity.ok(OrderedResponseDTO.converterToOrderedDTO(orderedService.findOrderedByCode(codigo),
+                orderedService.listOrderedItens(codigo)));
     }
 
-    @ApiOperation(value = "Salvar")
+    @ApiOperation(value = "Registrar pedido", nickname = "registrarPedido")
     @PostMapping
-    public ResponseEntity<Ordered> save(@RequestBody Ordered orderedRequest) {
-        Ordered orderedResponse = orderedService.save(orderedRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderedResponse);
+    public ResponseEntity<OrderedResponseDTO> registerOrdered(@Valid @RequestBody OrderedRequestDTO orderedRequestDTO){
+        Ordered ordered = orderedService.save(orderedRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(OrderedResponseDTO.converterToOrderedDTO(ordered, orderedService.listOrderedItens(ordered.getCode())));
+    }
+
+    @ApiOperation(value = "Atualizar pedido", nickname = "atualizarPedido")
+    @PutMapping("/{codigo}")
+    public ResponseEntity<OrderedResponseDTO> updateOrdered(@PathVariable Integer codigo, @Valid @RequestBody OrderedRequestDTO orderedRequestDTO){
+        Ordered ordered = orderedService.update(codigo, orderedRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(OrderedResponseDTO.converterToOrderedDTO(ordered, orderedService.listOrderedItens(ordered.getCode())));
     }
 }

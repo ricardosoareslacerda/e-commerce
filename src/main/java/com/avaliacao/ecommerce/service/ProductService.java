@@ -31,7 +31,9 @@ public class ProductService {
     public Product save(int codeCategory, Product product) {
         this.validateProductCategoryExist(codeCategory);
         this.validateDuplicate(product);
-        return productRepository.save(product);
+        product = productRepository.save(product);
+        product.setCategory(categoryService.findByCode(codeCategory).get());
+        return product;
     }
 
     public Product update(int codeCategory, int code, Product product) {
@@ -39,7 +41,9 @@ public class ProductService {
         this.validateProductCategoryExist(codeCategory);
         this.validateDuplicate(product);
         BeanUtils.copyProperties(product, productModel, "code");
-        return productRepository.save(productModel);
+        product = productRepository.save(product);
+        product.setCategory(categoryService.findByCode(codeCategory).get());
+        return product;
     }
 
     public void delete(int codeCategory, int code) {

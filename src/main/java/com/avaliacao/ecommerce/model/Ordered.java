@@ -20,30 +20,33 @@ public class Ordered {
 
     @Id
     @Column(name = "CODIGO")
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int code;
 
     @Column(name = "Data")
-    private LocalDate data;
+    private LocalDate date;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CODIGO_CLIENTE", referencedColumnName = "CODIGO")
     private Client client;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CODIGO_ENTREGA", referencedColumnName = "CODIGO")
     private Address delivery;
-
-    @OneToMany
-    @JoinColumn(name = "CODIGO_ITEM", referencedColumnName = "CODIGO")
-    private List<OrderedItem> itens;
 
     @Column(name = "TOTAL")
     private double amount;
 
+    public Ordered(LocalDate data, Client client, Address delivery, double amount) {
+        this.date = data;
+        this.client = client;
+        this.delivery = delivery;
+        this.amount = amount;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(code, data, client, delivery, itens);
+        return Objects.hash(code, date, client, delivery);
     }
 
     @Override
@@ -56,9 +59,8 @@ public class Ordered {
         }
         Ordered other = (Ordered) obj;
         return Objects.equals(code, other.code)
-                && Objects.equals(data, other.data)
+                && Objects.equals(date, other.date)
                 && Objects.equals(client, other.client)
-                && Objects.equals(delivery, other.delivery)
-                && Objects.equals(itens, other.itens);
+                && Objects.equals(delivery, other.delivery);
     }
 }

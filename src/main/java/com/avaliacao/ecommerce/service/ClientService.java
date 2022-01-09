@@ -9,7 +9,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -21,8 +20,8 @@ public class ClientService {
         return clientRepository.findAll();
     }
 
-    public Optional<Client> findByCode(int code) {
-        return clientRepository.findById(code);
+    public Client findByCode(int code) {
+        return clientRepository.findByCode(code);
     }
 
     public Client save(Client client) {
@@ -41,16 +40,16 @@ public class ClientService {
         clientRepository.deleteById(code);
     }
 
-    private Client validateExists(int code) {
-        Optional<Client> client = this.findByCode(code);
-        if (client.isEmpty()) {
+    public Client validateExists(int code) {
+        Client client = this.findByCode(code);
+        if (client == null) {
             throw new EmptyResultDataAccessException(1);
         }
-        return client.get();
+            return client;
     }
 
     private void validateDuplicate(Client client) {
-        Client clientModel = clientRepository.findByNome(client.getName());
+        Client clientModel = clientRepository.findByName(client.getName());
         if (clientModel != null &&
                 clientModel.getCode() != client.getCode()) {
             throw new BusinessException(

@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,7 +45,7 @@ public class ProductController {
 
     @ApiOperation(value = "Salvar", nickname = "save")
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> save(@PathVariable Integer codigoCategoria, @Valid @RequestBody ProductRequestDTO productRequest) {
+    public ResponseEntity<ProductResponseDTO> save(@PathVariable Integer codigoCategoria, @RequestBody ProductRequestDTO productRequest) {
         Product productModel = productService.save(codigoCategoria, productRequest.converterProductModel(codigoCategoria));
         return ResponseEntity.status(HttpStatus.CREATED).body(ProductResponseDTO.builder().build().converterToProductDTO(productModel));
     }
@@ -58,8 +57,9 @@ public class ProductController {
     }
 
     @ApiOperation(value = "Deletar", nickname = "deletar")
-    @PutMapping("/{codigo}")
-    public void deletar(@PathVariable Integer codigoCategoria, @PathVariable Integer codigo) {
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer codigoCategoria, @PathVariable Integer codigo) {
         productService.delete(codigoCategoria, codigo);
     }
 }

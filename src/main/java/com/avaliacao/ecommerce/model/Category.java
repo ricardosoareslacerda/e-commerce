@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Objects;
 
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,7 +18,7 @@ public class Category {
 
     @Id
     @Column(name = "CODIGO")
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int code;
 
     @Column(name = "NOME")
@@ -47,6 +46,7 @@ public class Category {
             return false;
         }
         Category other = (Category) obj;
-        return Objects.equals(code, other.code) && Objects.equals(name, other.name);
+        return Objects.equals(code, other.code)
+                && Objects.equals(name, other.name);
     }
 }

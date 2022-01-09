@@ -50,7 +50,7 @@ public class AddressService {
     }
 
     private void validateDuplicate(Address address) {
-        Address addressModel = addressRepository.findByNome(address.getPublicPlace());
+        Address addressModel = addressRepository.findByPublicPlace(address.getPublicPlace());
         if (addressModel != null &&
                 addressModel.getCode() != address.getCode()) {
             throw new BusinessException(

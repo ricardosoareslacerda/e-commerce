@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel("Categoria Retorno DTO")
+@ApiModel("Endereço Retorno DTO")
 public class AddressResponseDTO {
 
     @ApiModelProperty(value = "Codigo")

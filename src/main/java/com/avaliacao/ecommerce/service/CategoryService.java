@@ -50,7 +50,7 @@ public class CategoryService {
     }
 
     private void validateDuplicate(Category category) {
-        Category categoryModel = categoryRepository.findByNome(category.getName());
+        Category categoryModel = categoryRepository.findByName(category.getName());
         if (categoryModel != null &&
                 categoryModel.getCode() != category.getCode()) {
             throw new BusinessException(

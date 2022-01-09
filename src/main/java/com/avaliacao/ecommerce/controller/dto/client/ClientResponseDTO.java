@@ -10,13 +10,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel("Categoria Retorno DTO")
+@ApiModel("Cliente Retorno DTO")
 public class ClientResponseDTO {
 
     @ApiModelProperty(value = "Código")
@@ -26,10 +25,10 @@ public class ClientResponseDTO {
     private String name;
 
     @ApiModelProperty(value = "CPF")
-    private String cpf;
+    private Long cpf;
 
     @ApiModelProperty(value = "Celular")
-    private int cell;
+    private Long cell;
 
     @ApiModelProperty(value = "E-mail")
     private String email;
@@ -37,12 +36,19 @@ public class ClientResponseDTO {
     @ApiModelProperty(value = "Endereço")
     private List<AddressResponseDTO> addresses;
 
+    public ClientResponseDTO(Integer codigo, String name, Long cpf, Long cell, String email) {
+        this.codigo = codigo;
+        this.name = name;
+        this.cpf = cpf;
+        this.cell = cell;
+        this.email = email;
+    }
+
     public static ClientResponseDTO converterToClientDTO(Client client) {
         return new ClientResponseDTO(client.getCode(),
-                                    client.getName(),
-                                    client.getCpf(),
-                                    client.getCell(),
-                                    client.getEmail(),
-                                    client.getAddresses().stream().map(addressModel -> AddressResponseDTO.converterToAddresResponseDTO(addressModel)).collect(Collectors.toList()));
+                client.getName(),
+                client.getCpf(),
+                client.getCell(),
+                client.getEmail());
     }
 }

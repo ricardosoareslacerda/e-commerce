@@ -3,6 +3,7 @@ package com.avaliacao.ecommerce.controller;
 import com.avaliacao.ecommerce.controller.dto.client.ClientRequestDTO;
 import com.avaliacao.ecommerce.controller.dto.client.ClientResponseDTO;
 import com.avaliacao.ecommerce.model.Client;
+import com.avaliacao.ecommerce.service.AddressService;
 import com.avaliacao.ecommerce.service.ClientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,9 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private AddressService addressService;
+
     @ApiOperation(value = "Listar", nickname = "findAll")
     @GetMapping
     public List<ClientResponseDTO> findAll() {
@@ -35,9 +39,9 @@ public class ClientController {
     @ApiOperation(value = "Listar por codigo", nickname = "findByCode")
     @GetMapping("/{codigo}")
     public ResponseEntity<ClientResponseDTO> findByCode(@PathVariable Integer codigo) {
-        Optional<Client> clientModel = clientService.findByCode(codigo);
-        return clientModel.isPresent()
-                ? ResponseEntity.ok(ClientResponseDTO.converterToClientDTO(clientModel.get()))
+        Client clientModel = clientService.findByCode(codigo);
+        return (clientModel != null)
+                ? ResponseEntity.ok(ClientResponseDTO.converterToClientDTO(clientModel))
                 : ResponseEntity.notFound().build();
     }
 

@@ -4,6 +4,7 @@ import com.avaliacao.ecommerce.controller.dto.address.AddressRequestDTO;
 import com.avaliacao.ecommerce.controller.dto.address.AddressResponseDTO;
 import com.avaliacao.ecommerce.model.Address;
 import com.avaliacao.ecommerce.service.AddressService;
+import com.avaliacao.ecommerce.service.ClientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/endereco")
 public class AddressController {
+
+    @Autowired
+    private ClientService clientService;
 
     @Autowired
     private AddressService addressService;
@@ -41,16 +45,17 @@ public class AddressController {
     }
 
     @ApiOperation(value = "Salvar", nickname = "salvar")
-    @PostMapping
-    public ResponseEntity<AddressResponseDTO> save(@RequestBody AddressRequestDTO addressRequest) {
-        Address addressModel = addressService.save(addressRequest.converterAddressModel());
+    @PutMapping("/{codigoCliente}")
+    public ResponseEntity<AddressResponseDTO> save(@PathVariable Integer codigoCliente, @RequestBody AddressRequestDTO addressRequest) {
+
+        Address addressModel = addressService.save(addressRequest.converterAddressModel(clientService.validateExists(codigoCliente)));
         return ResponseEntity.status(HttpStatus.CREATED).body(AddressResponseDTO.converterToAddresResponseDTO(addressModel));
     }
 
     @ApiOperation(value = "Atualizar", nickname = "atualizar")
-    @PutMapping("/{codigo}")
-    public ResponseEntity<AddressResponseDTO> update(@PathVariable Integer codigo, @RequestBody AddressRequestDTO addressRequest) {
-        return ResponseEntity.ok(AddressResponseDTO.converterToAddresResponseDTO(addressService.update(codigo, addressRequest.converterAddressModel(codigo))));
+    @PutMapping("/cliente{codigoCliente}/{codigo}")
+    public ResponseEntity<AddressResponseDTO> update(@PathVariable Integer codigoCliente, @PathVariable Integer codigo, @RequestBody AddressRequestDTO addressRequest) {
+        return ResponseEntity.ok(AddressResponseDTO.converterToAddresResponseDTO(addressService.update(codigo, addressRequest.converterAddressModel(clientService.validateExists(codigoCliente)))));
     }
 
     @ApiOperation(value = "Deletar", nickname = "deletar")

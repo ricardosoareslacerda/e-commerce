@@ -1,6 +1,8 @@
 package com.avaliacao.ecommerce.controller.dto.ordered;
 
 import com.avaliacao.ecommerce.controller.dto.product.ProductResponseDTO;
+import com.avaliacao.ecommerce.model.Ordered;
+import com.avaliacao.ecommerce.model.OrderedItem;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel("Categoria Retorno DTO")
+@ApiModel("Pedido Item Retorno DTO")
 public class OrderedItemResponseDTO {
 
     @ApiModelProperty(value = "Codigo")
@@ -24,6 +26,13 @@ public class OrderedItemResponseDTO {
     @ApiModelProperty(value = "Produto")
     private ProductResponseDTO product;
 
-    @ApiModelProperty(value = "Total")
+    @ApiModelProperty(value = "Quantidade")
     private int quantity;
+
+    public static OrderedItemResponseDTO converterToOrderedItemResponseDTO(OrderedResponseDTO orderedResponseDTO, OrderedItem orderedItem) {
+        return new OrderedItemResponseDTO(orderedItem.getCode(),
+                orderedResponseDTO,
+                ProductResponseDTO.converterToProductDTO(orderedItem.getProduct()),
+                orderedItem.getQuantity());
+    }
 }

@@ -22,7 +22,7 @@ public class ProductRequestDTO {
 
     @ApiModelProperty(value = "Nome")
     @NotBlank(message = "Nome do produto não pode ser vazio!")
-    //@Length(min = 3, max = 100, message = "Nome")
+    @Length(min = 3, max = 100, message = "Nome")
     private String name;
 
     @ApiModelProperty(value = "Descrição")
@@ -39,7 +39,6 @@ public class ProductRequestDTO {
 
     @ApiModelProperty(value = "Valor")
     @NotNull(message = "Valor do produto deve ser informado!")
-    @Length(max = 500, message = "Observação")
     private double value;
 
     public Product converterProductModel(int codeCategory) {

@@ -18,7 +18,7 @@ public class Product {
 
     @Id
     @Column(name = "CODIGO")
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int code;
 
     @Column(name = "NOME")
@@ -33,9 +33,13 @@ public class Product {
     @Column(name = "VALOR")
     private double value;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CODIGO_CATEGORIA", referencedColumnName = "CODIGO")
     private Category category;
+
+    public Product(int code) {
+        this.code = code;
+    }
 
     public Product(String name, String description, int quantity, double value, Category category) {
         this.name = name;

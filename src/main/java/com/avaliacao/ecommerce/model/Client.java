@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "TB_ECOM_CLIENTE")
@@ -19,34 +18,46 @@ public class Client {
 
     @Id
     @Column(name = "CODIGO")
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int code;
 
-    @NotEmpty(message = "Nome do cliente não pode ser vazio!")
     @Column(name = "NOME")
     private String name;
 
-    @NotEmpty(message = "CPF do cliente deve ser informada!")
     @Column(name = "CPF")
-    private String cpf;
+    private Long cpf;
 
-    @NotEmpty(message = "Celular do cliente deve ser informado!")
     @Column(name = "CELULAR")
-    private int cell;
+    private Long cell;
 
-    @NotEmpty(message = "E-mail do cliente deve ser informado!")
     @Column(name = "E_MAIL")
     private String email;
 
-    @OneToMany
-    @JoinColumn(name = "CODIGO", referencedColumnName = "CODIGO")
-    private List<Address> addresses;
-
-    public Client(String name, String cpf, int cell, String email, List<Address> addresses) {
+    public Client(String name, Long cpf, Long cell, String email) {
         this.name = name;
         this.cpf = cpf;
         this.cell = cell;
         this.email = email;
-        this.addresses = addresses;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, name, cpf, cell, email);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Client)) {
+            return false;
+        }
+        Client other = (Client) obj;
+        return Objects.equals(code, other.code)
+                && Objects.equals(name, other.name)
+                && Objects.equals(cpf, other.cpf)
+                && Objects.equals(cell, other.cell)
+                && Objects.equals(email, other.email);
     }
 }
