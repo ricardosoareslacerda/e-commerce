@@ -2,6 +2,13 @@ version: '3.8'
 
 services:
 
+  redis:
+    image: redis
+    command: redis-server --requirepass password --appendonly yes
+    hostname: redis
+    ports:
+      - "6379:6379"
+
   mysql:
     image: mysql:8.0.27
     container_name: e-commerce_mysql

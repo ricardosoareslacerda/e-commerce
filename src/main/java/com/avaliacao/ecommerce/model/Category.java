@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Data
@@ -14,7 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "TB_ECOM_PRODUTO_CATEGORIA")
-public class Category {
+public class Category implements Serializable {
 
     @Id
     @Column(name = "CODIGO")

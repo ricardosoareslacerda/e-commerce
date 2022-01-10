@@ -2,6 +2,7 @@ package com.avaliacao.ecommerce.controller;
 
 import com.avaliacao.ecommerce.controller.dto.category.CategoryRequestDTO;
 import com.avaliacao.ecommerce.controller.dto.category.CategoryResponseDTO;
+import com.avaliacao.ecommerce.interfaces.ICategoryService;
 import com.avaliacao.ecommerce.model.Category;
 import com.avaliacao.ecommerce.service.CategoryService;
 import io.swagger.annotations.Api;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class CategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    private ICategoryService categoryService;
 
     @ApiOperation(value = "Listar", nickname = "findAll")
     @GetMapping
