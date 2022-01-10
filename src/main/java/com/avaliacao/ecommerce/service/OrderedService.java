@@ -42,19 +42,20 @@ public class OrderedService {
     }
 
     public List<OrderedItem> listOrderedItens(int orderedCode) {
-        return orderedItemRepository.findByOrderedByCode(orderedCode);
+        List<OrderedItem> orderedItemList = orderedItemRepository.findByOrderedByCode(orderedCode);
+        return orderedItemList;
     }
 
     public Ordered findOrderedByCode(int code) {
-        return orderedRepository.findByCode(code);
+        Ordered ordered = orderedRepository.findByCode(code);
+        return ordered;
     }
 
     public Ordered save(OrderedRequestDTO orderedRequestDTO) {
         Client client = this.validateClientOrderedExists(orderedRequestDTO.getClientCode());
         Address address = this.validateAddressOrderedExists(orderedRequestDTO.getDeliveryCode());
         this.validateProductExistsAndQuantity(orderedRequestDTO.getItens());
-        Ordered ordered = orderedRepository.save(orderedRequestDTO.converterOrderedModel(orderedRequestDTO.getDate(),
-                                                client,
+        Ordered ordered = orderedRepository.save(orderedRequestDTO.converterOrderedModel(client,
                                                 address,
                                                 orderedRequestDTO.getAmount()));
 
@@ -83,7 +84,7 @@ public class OrderedService {
 
     private Client validateClientOrderedExists(int codeClient) {
         Client client = clientService.findByCode(codeClient);
-        if (client != null) {
+        if (client == null) {
             throw new BusinessException(
                     String.format("O Cliente de código %s informado não existe no cadastro.", codeClient));
         }

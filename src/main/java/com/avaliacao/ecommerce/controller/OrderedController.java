@@ -35,8 +35,8 @@ public class OrderedController {
     @ApiOperation(value = "Listar pedidos por código", nickname = "listarPedidosPorCodigo")
     @GetMapping("/{codigo}")
     public ResponseEntity<OrderedResponseDTO> listOrderedByCode(@PathVariable Integer codigo) {
-        return ResponseEntity.ok(OrderedResponseDTO.converterToOrderedDTO(orderedService.findOrderedByCode(codigo),
-                orderedService.listOrderedItens(codigo)));
+        OrderedResponseDTO orderedResponseDTO = OrderedResponseDTO.converterToOrderedDTO(orderedService.findOrderedByCode(codigo), orderedService.listOrderedItens(codigo));
+        return ResponseEntity.ok(orderedResponseDTO);
     }
 
     @ApiOperation(value = "Registrar pedido", nickname = "registrarPedido")

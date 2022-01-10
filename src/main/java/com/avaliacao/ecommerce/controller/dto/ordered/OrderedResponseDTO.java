@@ -41,13 +41,12 @@ public class OrderedResponseDTO {
     private double amount;
 
     public static OrderedResponseDTO converterToOrderedDTO(Ordered ordered, List<OrderedItem> orderedItemList) {
-
         OrderedResponseDTO orderedResponseDTO = new OrderedResponseDTO(ordered.getCode(),
-                ordered.getDate(),
-                ClientResponseDTO.converterToClientDTO(ordered.getClient()),
-                AddressResponseDTO.converterToAddresResponseDTO(ordered.getDelivery()),
-                ordered.getAmount());
-        orderedResponseDTO.setItens(orderedItemList.stream().map(orderedItemModel -> OrderedItemResponseDTO.converterToOrderedItemResponseDTO(orderedResponseDTO, orderedItemModel)).collect(Collectors.toList()));
+                                                                        ordered.getDate(),
+                                                                        ClientResponseDTO.converterToClientDTO(ordered.getClient()),
+                                                                        AddressResponseDTO.converterToAddresResponseDTO(ordered.getDelivery()),
+                                                                        ordered.getAmount());
+        orderedResponseDTO.setItens(orderedItemList.stream().map(orderedItemModel -> OrderedItemResponseDTO.converterToOrderedItemResponseDTO(orderedItemModel)).collect(Collectors.toList()));
         return orderedResponseDTO;
     }
 

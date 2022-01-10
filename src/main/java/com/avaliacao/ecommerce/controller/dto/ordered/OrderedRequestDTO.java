@@ -23,30 +23,26 @@ import java.util.List;
 @ApiModel("Pedido Requisicao DTO")
 public class OrderedRequestDTO {
 
-    @ApiModelProperty(value = "Data")
-    @NotNull(message = "Data do pedido não pode ser vazio!")
-    private LocalDate date;
-
     @ApiModelProperty(value = "Cliente")
     @NotNull(message = "Cliente do pedido não pode ser vazio!")
-    @Min(value = 1, message = "Cliente")
+    //@Min(value = 1, message = "Cliente")
     private int clientCode;
 
     @ApiModelProperty(value = "Endereço de Entrega")
     @NotNull(message = "Endereço de Entrega do pedido não pode ser vazio!")
-    @Min(value = 1, message = "Endereço de Entrega")
+    //@Min(value = 1, message = "Endereço de Entrega")
     private int deliveryCode;
 
     @ApiModelProperty(value = "Itens do pedido")
     @NotEmpty(message = "Itens do pedido não pode ser vazio!")
-    @Min(value = 1, message = "Itens do pedido")
+    //@Min(value = 1, message = "Itens do pedido")
     private List<OrderedItemRequestDTO> itens;
 
     @ApiModelProperty(value = "Total do pedido")
     @NotNull(message = "Total do pedido não pode ser vazio!")
     private double amount;
 
-    public Ordered converterOrderedModel(LocalDate data, Client client, Address delivery, double amount) {
-        return new Ordered(data, client, delivery, amount);
+    public Ordered converterOrderedModel(Client client, Address delivery, double amount) {
+        return new Ordered(LocalDate.now(), client, delivery, amount);
     }
 }

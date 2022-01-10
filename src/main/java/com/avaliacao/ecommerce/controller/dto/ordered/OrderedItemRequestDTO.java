@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -26,12 +25,12 @@ public class OrderedItemRequestDTO {
 
     @ApiModelProperty(value = "Produto")
     @NotNull(message = "Produto do pedido não pode ser vazio!")
-    @Min(value = 1, message = "Produto")
+    //@Min(value = 1, message = "Produto")
     private int productCode;
 
     @ApiModelProperty(value = "Endereço de Entrega")
     @NotNull(message = "Categoria do produto não pode ser vazio!")
-    @Min(value = 1, message = "Categoria do produto")
+    //@Min(value = 1, message = "Categoria do produto")
     private int categoryCode;
 
     @ApiModelProperty(value = "Total")

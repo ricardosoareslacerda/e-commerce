@@ -1,7 +1,6 @@
 package com.avaliacao.ecommerce.controller.dto.ordered;
 
 import com.avaliacao.ecommerce.controller.dto.product.ProductResponseDTO;
-import com.avaliacao.ecommerce.model.Ordered;
 import com.avaliacao.ecommerce.model.OrderedItem;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,18 +19,14 @@ public class OrderedItemResponseDTO {
     @ApiModelProperty(value = "Codigo")
     private int code;
 
-    @ApiModelProperty(value = "Pedido")
-    private OrderedResponseDTO ordered;
-
     @ApiModelProperty(value = "Produto")
     private ProductResponseDTO product;
 
     @ApiModelProperty(value = "Quantidade")
     private int quantity;
 
-    public static OrderedItemResponseDTO converterToOrderedItemResponseDTO(OrderedResponseDTO orderedResponseDTO, OrderedItem orderedItem) {
+    public static OrderedItemResponseDTO converterToOrderedItemResponseDTO(OrderedItem orderedItem) {
         return new OrderedItemResponseDTO(orderedItem.getCode(),
-                orderedResponseDTO,
                 ProductResponseDTO.converterToProductDTO(orderedItem.getProduct()),
                 orderedItem.getQuantity());
     }
